@@ -27,11 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // Check if there's a stored token first
       final storedToken = await ApiService.getToken();
-      print('Stored token: ${storedToken != null ? "EXISTS" : "NULL"}');
 
       if (storedToken == null) {
         // No token stored, go directly to login
-        print('No token found, going to login screen');
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
@@ -39,9 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
 
       // Validate if the stored token is still valid and fetch user data
-      print('Validating token and fetching user data...');
       final isValidToken = await ApiService.validateToken();
-      print('Token validation result: $isValidToken');
 
       if (isValidToken) {
         // Fetch user data and set it in AuthProvider
@@ -49,10 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
           final response = await ApiService.get('/auth/me');
           if (response['user'] != null) {
             authProvider.setUserFromJson(response['user']);
-            print('User data loaded successfully');
           }
         } catch (e) {
-          print('Error fetching user data: $e');
           // If we can't fetch user data, clear token and go to login
           await ApiService.clearToken();
           Navigator.of(context).pushReplacement(
@@ -62,13 +56,11 @@ class _SplashScreenState extends State<SplashScreen> {
         }
 
         // User has a valid token and data, go to home screen
-        print('Valid token and user data, going to home screen');
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } else {
         // User is not logged in or token is invalid, go to login screen
-        print('Invalid token, going to login screen');
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
@@ -109,51 +101,6 @@ class _SplashScreenState extends State<SplashScreen> {
               color: Theme.of(context).colorScheme.onPrimary,
             ),
             const SizedBox(height: 40),
-            // Temporary buttons for debugging
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    await ApiService.clearToken();
-                    print('Token cleared manually');
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    foregroundColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  child: const Text('Clear Data & Go to Login'),
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () async {
-                    final token = await ApiService.getToken();
-                    print('Current token: $token');
-                    final isValid = await ApiService.validateToken();
-                    print('Token valid: $isValid');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Token exists: ${token != null}, Valid: $isValid',
-                        ),
-                        duration: const Duration(seconds: 3),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.onPrimary.withOpacity(0.8),
-                    foregroundColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  child: const Text('Check Token Status'),
-                ),
-              ],
-            ),
           ],
         ),
       ),

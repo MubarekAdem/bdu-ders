@@ -310,7 +310,7 @@ class LectureProvider with ChangeNotifier {
         .toList();
   }
 
-  List<Lecture> getUnavailableLecturesForDay(String day) {
+  List<Lecture> getLecturesNotAvailableForDay(String day) {
     return _lectures
         .where(
           (lecture) =>

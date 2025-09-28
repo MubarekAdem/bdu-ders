@@ -376,7 +376,7 @@ class _LectureCardState extends State<LectureCard>
                                   child: Text(
                                     updatedLecture.isAvailableForToday
                                         ? 'Available'
-                                        : 'Unavailable',
+                                        : 'ደርስ የለም',
                                     style: TextStyle(
                                       color: updatedLecture.isAvailableForToday
                                           ? Colors.green
@@ -537,7 +537,7 @@ class _LectureCardState extends State<LectureCard>
                                         ),
                                         label: Text(
                                           updatedLecture.isAvailableForToday
-                                              ? 'Set Unavailable'
+                                              ? 'ደርስ የለም አድርግ'
                                               : 'Set Available',
                                         ),
                                         style: ElevatedButton.styleFrom(
@@ -586,7 +586,7 @@ class _LectureCardState extends State<LectureCard>
       builder: (context) => AlertDialog(
         title: Text(
           lecture.isAvailableForToday
-              ? 'Set Lecture Unavailable for Today'
+              ? 'ደርስ የለም አድርግ ለዛሬ'
               : 'Set Lecture Available for Today',
         ),
         content: Text(
@@ -610,7 +610,7 @@ class _LectureCardState extends State<LectureCard>
             },
             child: Text(
               lecture.isAvailableForToday
-                  ? 'Set Unavailable for Today'
+                  ? 'ደርስ የለም አድርግ ለዛሬ'
                   : 'Set Available for Today',
             ),
           ),

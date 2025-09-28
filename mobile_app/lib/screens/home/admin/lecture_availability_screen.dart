@@ -248,7 +248,7 @@ class AvailabilityCard extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      isAvailable ? 'Available' : 'Unavailable',
+                      isAvailable ? 'Available' : 'ደርስ የለም',
                       style: TextStyle(
                         color: isAvailable ? Colors.green : Colors.red,
                         fontSize: 12,
@@ -334,7 +334,7 @@ class AvailabilityCard extends StatelessWidget {
                               size: 16,
                             ),
                             label: Text(
-                              isAvailable ? 'Set Unavailable' : 'Set Available',
+                              isAvailable ? 'ደርስ የለም አድርግ' : 'Set Available',
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: isAvailable
@@ -370,7 +370,7 @@ class AvailabilityCard extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Text(
           lecture.isAvailableForDay(selectedDay)
-              ? 'Set Lecture Unavailable for All $selectedDay'
+              ? 'ደርስ የለም አድርግ ለሁሉም $selectedDay'
               : 'Set Lecture Available for All $selectedDay',
         ),
         content: Text(
@@ -394,7 +394,7 @@ class AvailabilityCard extends StatelessWidget {
             },
             child: Text(
               lecture.isAvailableForDay(selectedDay)
-                  ? 'Set Unavailable for All $selectedDay'
+                  ? 'ደርስ የለም አድርግ ለሁሉም $selectedDay'
                   : 'Set Available for All $selectedDay',
             ),
           ),
