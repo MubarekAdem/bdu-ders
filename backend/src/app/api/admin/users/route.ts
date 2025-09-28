@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../lib/mongodb";
-import { requireAdmin } from "../../../../lib/middleware";
+import { getDb } from "../../../../../lib/mongodb";
+import { requireAdmin } from "../../../../../lib/middleware";
 
 // GET /api/admin/users - Get all users (admin only)
 export const GET = requireAdmin(async (request: NextRequest) => {

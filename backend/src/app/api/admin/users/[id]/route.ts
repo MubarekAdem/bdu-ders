@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../../lib/mongodb";
-import { requireAdmin } from "../../../../../lib/middleware";
+import { getDb } from "./../../../../../../lib/mongodb";
+import { requireAdmin } from "./../../../../../../lib/middleware";
 import { ObjectId } from "mongodb";
 
 // PUT /api/admin/users/[id] - Update user role (admin only)

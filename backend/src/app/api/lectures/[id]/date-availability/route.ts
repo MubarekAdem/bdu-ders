@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../../../../lib/mongodb";
+import { getDb } from "./../../../../../../lib/mongodb";
 import {
   authenticateToken,
   requireAdmin,
-} from "../../../../../../../lib/middleware";
-import { UpdateDateAvailabilityData } from "../../../../../../../models/Lecture";
+} from "./../../../../../../lib/middleware";
+import { UpdateDateAvailabilityData } from "./../../../../../../models/Lecture";
 import { ObjectId } from "mongodb";
 
 // PUT /api/lectures/[id]/date-availability - Update lecture availability for a specific date (admin only)
