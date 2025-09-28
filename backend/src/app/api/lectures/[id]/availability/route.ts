@@ -73,16 +73,60 @@ export const PUT = requireAdmin(
         );
       }
 
+      console.log("Existing lecture data:", {
+        id: existingLecture._id,
+        title: existingLecture.title,
+        dayAvailability: existingLecture.dayAvailability,
+      });
+
+      // Ensure dayAvailability field exists, initialize if not
+      if (!existingLecture.dayAvailability) {
+        console.log("dayAvailability field missing, initializing...");
+        const initializeResult = await lecturesCollection.updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $set: {
+              dayAvailability: {
+                Monday: true,
+                Tuesday: true,
+                Wednesday: true,
+                Thursday: true,
+                Friday: true,
+                Saturday: true,
+                Sunday: true,
+              },
+              updatedAt: new Date(),
+            },
+          }
+        );
+        console.log("Initialize dayAvailability result:", {
+          matchedCount: initializeResult.matchedCount,
+          modifiedCount: initializeResult.modifiedCount,
+        });
+      }
+
       // Update the specific day availability
       const updateQuery = {
         [`dayAvailability.${day}`]: available,
         updatedAt: new Date(),
       };
 
+      console.log("Updating lecture availability:", {
+        id,
+        day,
+        available,
+        updateQuery,
+      });
+
       const result = await lecturesCollection.updateOne(
         { _id: new ObjectId(id) },
         { $set: updateQuery }
       );
+
+      console.log("Update result:", {
+        matchedCount: result.matchedCount,
+        modifiedCount: result.modifiedCount,
+      });
 
       if (result.matchedCount === 0) {
         return NextResponse.json(
@@ -94,6 +138,13 @@ export const PUT = requireAdmin(
       // Get the updated lecture
       const updatedLecture = await lecturesCollection.findOne({
         _id: new ObjectId(id),
+      });
+
+      console.log("Updated lecture data:", {
+        id: updatedLecture?._id,
+        title: updatedLecture?.title,
+        dayAvailability: updatedLecture?.dayAvailability,
+        updatedAt: updatedLecture?.updatedAt,
       });
 
       return NextResponse.json({

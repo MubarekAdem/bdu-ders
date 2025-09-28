@@ -64,16 +64,34 @@ export const PUT = requireAdmin(
         );
       }
 
+      console.log("Existing lecture data:", {
+        id: existingLecture._id,
+        title: existingLecture.title,
+        dateAvailability: existingLecture.dateAvailability,
+      });
+
       // Update the specific date availability
       const updateQuery = {
         [`dateAvailability.${date}`]: available,
         updatedAt: new Date(),
       };
 
+      console.log("Updating lecture date availability:", {
+        id,
+        date,
+        available,
+        updateQuery,
+      });
+
       const result = await lecturesCollection.updateOne(
         { _id: new ObjectId(id) },
         { $set: updateQuery }
       );
+
+      console.log("Update result:", {
+        matchedCount: result.matchedCount,
+        modifiedCount: result.modifiedCount,
+      });
 
       if (result.matchedCount === 0) {
         return NextResponse.json(
@@ -85,6 +103,13 @@ export const PUT = requireAdmin(
       // Get the updated lecture
       const updatedLecture = await lecturesCollection.findOne({
         _id: new ObjectId(id),
+      });
+
+      console.log("Updated lecture data:", {
+        id: updatedLecture?._id,
+        title: updatedLecture?.title,
+        dateAvailability: updatedLecture?.dateAvailability,
+        updatedAt: updatedLecture?.updatedAt,
       });
 
       return NextResponse.json({

@@ -45,6 +45,7 @@ export const GET = authenticateToken(async (req: AuthenticatedRequest) => {
           markedDate: isMarkedForToday ? today : null,
           markedDates: lecture.markedDates,
           dayAvailability: lecture.dayAvailability,
+          dateAvailability: lecture.dateAvailability,
           createdAt: lecture.createdAt,
         };
       }),

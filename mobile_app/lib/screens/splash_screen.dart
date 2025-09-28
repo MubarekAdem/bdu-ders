@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Lecture Scheduler',
+              'ደርስ BDU',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
