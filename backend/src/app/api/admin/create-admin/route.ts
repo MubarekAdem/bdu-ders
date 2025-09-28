@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
     const {
       name = "Admin User",
       email = "admin@example.com",
-      phone = "+1234567890",
       password = "admin123",
     } = body;
 
@@ -26,11 +25,10 @@ export async function POST(request: NextRequest) {
           id: existingAdmin._id,
           name: existingAdmin.name,
           email: existingAdmin.email,
-          phone: existingAdmin.phone,
           role: existingAdmin.role,
         },
         loginCredentials: {
-          phone: existingAdmin.phone,
+          email: existingAdmin.email,
           password: "Use existing password or contact admin",
         },
       });
@@ -43,7 +41,6 @@ export async function POST(request: NextRequest) {
     const adminUser: User = {
       name,
       email,
-      phone,
       password: hashedPassword,
       role: "admin",
       createdAt: new Date(),
@@ -66,11 +63,10 @@ export async function POST(request: NextRequest) {
           id: createdAdmin._id,
           name: createdAdmin.name,
           email: createdAdmin.email,
-          phone: createdAdmin.phone,
           role: createdAdmin.role,
         },
         loginCredentials: {
-          phone: createdAdmin.phone,
+          email: createdAdmin.email,
           password: password,
         },
       },
