@@ -135,7 +135,6 @@ class _ScheduleTabState extends State<ScheduleTab>
   Widget _buildAllLectures() {
     return Column(
       children: [
-        // Day selector
         Container(
           height: 60,
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -180,7 +179,6 @@ class _ScheduleTabState extends State<ScheduleTab>
           ),
         ),
         const Divider(),
-        // Lectures list
         Expanded(
           child: Consumer<LectureProvider>(
             builder: (context, lectureProvider, child) {
@@ -302,12 +300,11 @@ class _LectureCardState extends State<LectureCard>
   Widget build(BuildContext context) {
     return Consumer<LectureProvider>(
       builder: (context, lectureProvider, child) {
-        // Find the updated lecture from the provider
         final updatedLecture = lectureProvider.lectures.firstWhere(
           (lecture) => lecture.id == widget.lecture.id,
           orElse: () => widget.lecture,
         );
-        
+
         return AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
@@ -317,242 +314,285 @@ class _LectureCardState extends State<LectureCard>
                 opacity: _fadeAnimation.value,
                 child: Card(
                   margin: const EdgeInsets.only(bottom: 12),
-                  elevation: 3,
+                  elevation: updatedLecture.isAvailableForToday ? 3 : 1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                     side: BorderSide(
-                      color: updatedLecture.isMarkedForToday
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.error,
+                      color: updatedLecture.isAvailableForToday
+                          ? (updatedLecture.isMarkedForToday
+                                ? Theme.of(context).colorScheme.secondary
+                                : Theme.of(context).colorScheme.primary)
+                          : Colors.grey,
                       width: 2,
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                  color: updatedLecture.isAvailableForToday
+                      ? null
+                      : Colors.grey[100],
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Text(
-                                updatedLecture.title,
-                                style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: updatedLecture.isMarkedForToday
-                                    ? Theme.of(
-                                        context,
-                                      ).colorScheme.secondary.withOpacity(0.1)
-                                    : Theme.of(
-                                        context,
-                                      ).colorScheme.error.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: updatedLecture.isMarkedForToday
-                                      ? Theme.of(context).colorScheme.secondary
-                                      : Theme.of(context).colorScheme.error,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Text(
-                                updatedLecture.isMarkedForToday
-                                    ? 'Marked for Today ✓'
-                                    : 'Not Marked for Today',
-                                style: TextStyle(
-                                  color: updatedLecture.isMarkedForToday
-                                      ? Theme.of(context).colorScheme.secondary
-                                      : Theme.of(context).colorScheme.error,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primary.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 1,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.access_time,
-                            size: 16,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          '${updatedLecture.timeStart} - ${updatedLecture.timeEnd}',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.secondary.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.secondary,
-                              width: 1,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.location_on,
-                            size: 16,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            updatedLecture.location,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primary.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 1,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.person,
-                            size: 16,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          updatedLecture.lecturerName,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Admin controls - only visible for admins
-                    Consumer<AuthProvider>(
-                      builder: (context, authProvider, child) {
-                        final isAdmin = authProvider.user?.role == 'admin';
-
-                        if (!isAdmin) return const SizedBox.shrink();
-
-                        return Column(
-                          children: [
-                            const SizedBox(height: 12),
-                            const Divider(),
-                            const SizedBox(height: 8),
                             Row(
                               children: [
                                 Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () => _showMarkDialog(context),
-                                    icon: Icon(
-                                      widget.lecture.isMarkedForToday
-                                          ? Icons.check_circle
-                                          : Icons.radio_button_unchecked,
-                                      size: 16,
+                                  child: Text(
+                                    updatedLecture.title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              updatedLecture.isAvailableForToday
+                                              ? Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface
+                                              : Colors.grey[600],
+                                        ),
+                                  ),
+                                ),
+                                // Availability status
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: updatedLecture.isAvailableForToday
+                                        ? Colors.green.withOpacity(0.1)
+                                        : Colors.red.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: updatedLecture.isAvailableForToday
+                                          ? Colors.green
+                                          : Colors.red,
+                                      width: 1,
                                     ),
-                                    label: Text(
-                                      widget.lecture.isMarkedForToday
-                                          ? 'Unmark for Today'
-                                          : 'Mark for Today',
+                                  ),
+                                  child: Text(
+                                    updatedLecture.isAvailableForToday
+                                        ? 'Available'
+                                        : 'Unavailable',
+                                    style: TextStyle(
+                                      color: updatedLecture.isAvailableForToday
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          widget.lecture.isMarkedForToday
-                                          ? Theme.of(context).colorScheme.error
-                                          : Theme.of(
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.access_time,
+                                    size: 16,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  '${updatedLecture.timeStart} - ${updatedLecture.timeEnd}',
+                                  style: TextStyle(
+                                    color: updatedLecture.isAvailableForToday
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface
+                                        : Colors.grey[600],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.location_on,
+                                    size: 16,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    updatedLecture.location,
+                                    style: TextStyle(
+                                      color: updatedLecture.isAvailableForToday
+                                          ? Theme.of(
                                               context,
-                                            ).colorScheme.secondary,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
+                                            ).colorScheme.onSurface
+                                          : Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 16,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  updatedLecture.lecturerName,
+                                  style: TextStyle(
+                                    color: updatedLecture.isAvailableForToday
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface
+                                        : Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Consumer<AuthProvider>(
+                              builder: (context, authProvider, child) {
+                                final isAdmin =
+                                    authProvider.user?.role == 'admin';
+
+                                if (!isAdmin) return const SizedBox.shrink();
+
+                                return Column(
+                                  children: [
+                                    const SizedBox(height: 12),
+                                    const Divider(),
+                                    const SizedBox(height: 8),
+                                    // Availability toggle
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton.icon(
+                                        onPressed: () =>
+                                            _showAvailabilityDialog(
+                                              context,
+                                              updatedLecture,
+                                            ),
+                                        icon: Icon(
+                                          updatedLecture.isAvailableForToday
+                                              ? Icons.check_circle
+                                              : Icons.cancel,
+                                          size: 16,
+                                        ),
+                                        label: Text(
+                                          updatedLecture.isAvailableForToday
+                                              ? 'Set Unavailable'
+                                              : 'Set Available',
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              updatedLecture.isAvailableForToday
+                                              ? Colors.red
+                                              : Colors.green,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                           ],
-                        );
-                      },
-                    ),
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
   }
 
-  void _showMarkDialog(BuildContext context) {
+  void _showAvailabilityDialog(BuildContext context, Lecture lecture) {
     final lectureProvider = Provider.of<LectureProvider>(
       context,
       listen: false,
     );
 
+    final today = DateTime.now();
+    final todayString = _formatDateString(today);
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          widget.lecture.isMarkedForToday
-              ? 'Unmark Lecture for Today'
-              : 'Mark Lecture for Today',
+          lecture.isAvailableForToday
+              ? 'Set Lecture Unavailable for Today'
+              : 'Set Lecture Available for Today',
         ),
         content: Text(
-          widget.lecture.isMarkedForToday
-              ? 'Are you sure you want to unmark "${widget.lecture.title}" for today?'
-              : 'Are you sure you want to mark "${widget.lecture.title}" for today?',
+          lecture.isAvailableForToday
+              ? 'Are you sure you want to make "${lecture.title}" unavailable for today (${_formatDisplayDate(today)})? This will only affect today, not future dates.'
+              : 'Are you sure you want to make "${lecture.title}" available for today (${_formatDisplayDate(today)})? This will only affect today, not future dates.',
         ),
         actions: [
           TextButton(
@@ -562,20 +602,42 @@ class _LectureCardState extends State<LectureCard>
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              if (widget.lecture.isMarkedForToday) {
-                await lectureProvider.unmarkLecture(widget.lecture.id);
-              } else {
-                await lectureProvider.markLecture(widget.lecture.id);
-              }
+              await lectureProvider.updateLectureDateAvailability(
+                id: lecture.id,
+                date: todayString,
+                available: !lecture.isAvailableForToday,
+              );
             },
             child: Text(
-              widget.lecture.isMarkedForToday
-                  ? 'Unmark for Today'
-                  : 'Mark for Today',
+              lecture.isAvailableForToday
+                  ? 'Set Unavailable for Today'
+                  : 'Set Available for Today',
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _formatDateString(DateTime date) {
+    return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  String _formatDisplayDate(DateTime date) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 }

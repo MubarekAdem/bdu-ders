@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PreviousLectureProvider()),
       ],
       child: MaterialApp(
-        title: 'Lecture Scheduler',
+        title: 'ደርስ BDU',
         theme: ThemeData(
           colorScheme: const ColorScheme.light(
             primary: Color(0xFF2E7D32), // Deep green

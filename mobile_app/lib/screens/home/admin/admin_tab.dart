@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'lecture_management_screen.dart';
 import 'previous_lecture_management_screen.dart';
+import 'lecture_availability_screen.dart';
 
 class AdminTab extends StatelessWidget {
   const AdminTab({super.key});
@@ -45,6 +46,20 @@ class AdminTab extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) =>
                         const PreviousLectureManagementScreen(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            _AdminActionCard(
+              title: 'Lecture Availability',
+              subtitle: 'Manage lecture availability by day of week',
+              icon: Icons.event_available,
+              color: Colors.orange,
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const LectureAvailabilityScreen(),
                   ),
                 );
               },

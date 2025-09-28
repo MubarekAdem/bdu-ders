@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../../../lib/mongodb";
-import { hashPassword } from "../../../../../../lib/auth";
-import { User } from "../../../../../../models/User";
+import { getDb } from "../../../../../lib/mongodb";
+import { hashPassword } from "../../../../../lib/auth";
+import { User } from "../../../../../models/User";
 
 // POST /api/admin/create-admin - Create admin user (temporary endpoint)
 export async function POST(request: NextRequest) {

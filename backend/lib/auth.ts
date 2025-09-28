@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "5y";
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 12;
@@ -21,7 +21,6 @@ export const generateToken = (user: User): string => {
   const payload = {
     id: user._id?.toString(),
     email: user.email,
-    phone: user.phone,
     role: user.role,
   };
 

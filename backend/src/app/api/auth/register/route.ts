@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../../../lib/mongodb";
-import { hashPassword, generateToken } from "../../../../../../lib/auth";
-import { User, CreateUserData } from "../../../../../../models/User";
+import { getDb } from "../../../../../lib/mongodb";
+import { hashPassword, generateToken } from "../../../../../lib/auth";
+import { User, CreateUserData } from "../../../../../models/User";
 
 export async function POST(request: NextRequest) {
   try {
     const body: CreateUserData = await request.json();
-    const { name, email, phone, password, role = "user" } = body;
+    const { name, email, password, role = "user" } = body;
 
     // Validate required fields
-    if (!name || !email || !phone || !password) {
+    if (!email || !password) {
       return NextResponse.json(
-        { error: "All fields are required" },
+        { error: "Email and password are required" },
         { status: 400 }
       );
     }
@@ -21,15 +21,6 @@ export async function POST(request: NextRequest) {
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: "Invalid email format" },
-        { status: 400 }
-      );
-    }
-
-    // Validate phone format (basic validation)
-    const phoneRegex = /^\+?[\d\s\-\(\)]+$/;
-    if (!phoneRegex.test(phone)) {
-      return NextResponse.json(
-        { error: "Invalid phone format" },
         { status: 400 }
       );
     }
@@ -46,13 +37,11 @@ export async function POST(request: NextRequest) {
     const usersCollection = db.collection<User>("users");
 
     // Check if user already exists
-    const existingUser = await usersCollection.findOne({
-      $or: [{ email }, { phone }],
-    });
+    const existingUser = await usersCollection.findOne({ email });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "User with this email or phone already exists" },
+        { error: "User with this email already exists" },
         { status: 409 }
       );
     }
@@ -64,7 +53,6 @@ export async function POST(request: NextRequest) {
     const newUser: User = {
       name,
       email,
-      phone,
       password: hashedPassword,
       role,
       createdAt: new Date(),
@@ -88,7 +76,6 @@ export async function POST(request: NextRequest) {
           id: user._id,
           name: user.name,
           email: user.email,
-          phone: user.phone,
           role: user.role,
         },
         token,

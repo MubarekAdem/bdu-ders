@@ -13,13 +13,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
   @override
   void dispose() {
-    _phoneController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       final success = await authProvider.login(
-        _phoneController.text.trim(),
+        _emailController.text.trim(),
         _passwordController.text,
       );
 
@@ -76,19 +76,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 40),
                 TextFormField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                    prefixIcon: Icon(Icons.phone),
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email),
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
+                      return 'Please enter your email';
                     }
-                    if (value.length < 10) {
-                      return 'Please enter a valid phone number';
+                    if (!RegExp(
+                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                    ).hasMatch(value)) {
+                      return 'Please enter a valid email';
                     }
                     return null;
                   },

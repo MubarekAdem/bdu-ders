@@ -48,8 +48,8 @@ class ProfileTab extends StatelessWidget {
                               context,
                             ).colorScheme.primary,
                             child: Text(
-                              user.name.isNotEmpty
-                                  ? user.name[0].toUpperCase()
+                              (user.name?.isNotEmpty == true)
+                                  ? user.name![0].toUpperCase()
                                   : 'U',
                               style: TextStyle(
                                 fontSize: 32,
@@ -61,7 +61,7 @@ class ProfileTab extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          user.name,
+                          user.name ?? 'User',
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
@@ -71,16 +71,6 @@ class ProfileTab extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           user.email,
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withOpacity(0.7),
-                              ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          user.phone,
                           style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(
                                 color: Theme.of(
@@ -192,25 +182,6 @@ class ProfileTab extends StatelessWidget {
                             const SnackBar(
                               content: Text('Help & support coming soon!'),
                             ),
-                          );
-                        },
-                      ),
-                      const Divider(height: 1),
-                      ListTile(
-                        leading: const Icon(Icons.info),
-                        title: const Text('About'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                          showAboutDialog(
-                            context: context,
-                            applicationName: 'Lecture Scheduler',
-                            applicationVersion: '1.0.0',
-                            applicationIcon: const Icon(Icons.school, size: 48),
-                            children: [
-                              const Text(
-                                'A simple and efficient way to manage lecture schedules.',
-                              ),
-                            ],
                           );
                         },
                       ),

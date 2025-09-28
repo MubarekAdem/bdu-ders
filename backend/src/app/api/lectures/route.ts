@@ -40,6 +40,7 @@ export const GET = authenticateToken(async (req: AuthenticatedRequest) => {
           isMarked: isMarkedForToday,
           markedDate: isMarkedForToday ? today : null,
           markedDates: lecture.markedDates,
+          dayAvailability: lecture.dayAvailability,
           createdAt: lecture.createdAt,
         };
       }),
@@ -115,6 +116,17 @@ export const POST = requireAdmin(async (req: AuthenticatedRequest) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Start of today
 
+    // Create default day availability (all days available by default)
+    const defaultDayAvailability = {
+      Monday: true,
+      Tuesday: true,
+      Wednesday: true,
+      Thursday: true,
+      Friday: true,
+      Saturday: true,
+      Sunday: true,
+    };
+
     const newLecture: Lecture = {
       title,
       timeStart,
@@ -124,6 +136,7 @@ export const POST = requireAdmin(async (req: AuthenticatedRequest) => {
       lecturerName,
       isMarked: true, // Default to marked
       markedDates: [today], // Mark for today by default
+      dayAvailability: body.dayAvailability || defaultDayAvailability,
       createdBy: new ObjectId(req.user!.id),
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -150,6 +163,7 @@ export const POST = requireAdmin(async (req: AuthenticatedRequest) => {
           location: lecture.location,
           lecturerName: lecture.lecturerName,
           isMarked: lecture.isMarked,
+          dayAvailability: lecture.dayAvailability,
           createdAt: lecture.createdAt,
         },
       },

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../../../lib/mongodb";
-import { requireAdmin } from "../../../../../../lib/middleware";
-import { Lecture } from "../../../../../../models/Lecture";
+import { getDb } from "../../../../../../../lib/mongodb";
+import { requireAdmin } from "../../../../../../../lib/middleware";
+import { Lecture } from "../../../../../../../models/Lecture";
 import { ObjectId } from "mongodb";
 
 // POST /api/lectures/[id]/mark - Mark lecture for today (admin only)

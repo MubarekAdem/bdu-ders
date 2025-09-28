@@ -14,7 +14,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
@@ -24,7 +23,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -35,9 +33,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       final success = await authProvider.register(
-        name: _nameController.text.trim(),
+        name: _nameController.text.trim().isEmpty
+            ? null
+            : _nameController.text.trim(),
         email: _emailController.text.trim(),
-        phone: _phoneController.text.trim(),
         password: _passwordController.text,
       );
 
@@ -90,15 +89,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Full Name',
+                    labelText: 'Full Name (Optional)',
                     prefixIcon: Icon(Icons.person),
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your full name';
-                    }
-                    if (value.length < 2) {
+                    if (value != null && value.isNotEmpty && value.length < 2) {
                       return 'Name must be at least 2 characters';
                     }
                     return null;
@@ -121,25 +117,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                     ).hasMatch(value)) {
                       return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                    prefixIcon: Icon(Icons.phone),
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
-                    }
-                    if (value.length < 10) {
-                      return 'Please enter a valid phone number';
                     }
                     return null;
                   },

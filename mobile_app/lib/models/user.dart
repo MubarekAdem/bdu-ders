@@ -1,24 +1,16 @@
 class User {
   final String id;
-  final String name;
+  final String? name;
   final String email;
-  final String phone;
   final String role;
 
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.role,
-  });
+  User({required this.id, this.name, required this.email, required this.role});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] ?? '',
-      name: json['name'] ?? '',
+      name: json['name'],
       email: json['email'] ?? '',
-      phone: json['phone'] ?? '',
       role: json['role'] ?? 'user',
     );
   }
@@ -26,9 +18,8 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      if (name != null) 'name': name,
       'email': email,
-      'phone': phone,
       'role': role,
     };
   }

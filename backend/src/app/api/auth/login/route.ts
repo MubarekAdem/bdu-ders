@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../../../lib/mongodb";
-import { comparePassword, generateToken } from "../../../../../../lib/auth";
-import { User, LoginData } from "../../../../../../models/User";
+import { getDb } from "../../../../../lib/mongodb";
+import { comparePassword, generateToken } from "../../../../../lib/auth";
+import { User, LoginData } from "../../../../../models/User";
 
 export async function POST(request: NextRequest) {
   try {
     const body: LoginData = await request.json();
-    const { phone, password } = body;
+    const { email, password } = body;
 
     // Validate required fields
-    if (!phone || !password) {
+    if (!email || !password) {
       return NextResponse.json(
-        { error: "Phone and password are required" },
+        { error: "Email and password are required" },
         { status: 400 }
       );
     }
@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
     const db = await getDb();
     const usersCollection = db.collection<User>("users");
 
-    // Find user by phone
-    const user = await usersCollection.findOne({ phone });
+    // Find user by email
+    const user = await usersCollection.findOne({ email });
 
     if (!user) {
       return NextResponse.json(
@@ -48,7 +48,6 @@ export async function POST(request: NextRequest) {
         id: user._id,
         name: user.name,
         email: user.email,
-        phone: user.phone,
         role: user.role,
       },
       token,

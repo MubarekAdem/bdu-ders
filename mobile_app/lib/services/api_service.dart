@@ -5,7 +5,7 @@ import '../models/lecture.dart';
 import '../models/previous_lecture.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.240.97.20:3000/api';
+  static const String baseUrl = 'http://192.168.8.103:3000/api';
   static String? _token;
 
   static Future<void> setToken(String token) async {
@@ -89,18 +89,16 @@ class ApiService {
 
   // Authentication
   static Future<Map<String, dynamic>> register({
-    required String name,
+    String? name,
     required String email,
-    required String phone,
     required String password,
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/register'),
       headers: _headers,
       body: jsonEncode({
-        'name': name,
+        if (name != null) 'name': name,
         'email': email,
-        'phone': phone,
         'password': password,
       }),
     );
@@ -113,13 +111,13 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> login({
-    required String phone,
+    required String email,
     required String password,
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: _headers,
-      body: jsonEncode({'phone': phone, 'password': password}),
+      body: jsonEncode({'email': email, 'password': password}),
     );
 
     final data = jsonDecode(response.body);
@@ -231,6 +229,80 @@ class ApiService {
     }
     throw Exception(
       'Failed to unmark lecture: ${data['error'] ?? 'Unknown error'}',
+    );
+  }
+
+  // Lecture Availability
+  static Future<Map<String, dynamic>> getLectureAvailability(String id) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/lectures/$id/availability'),
+      headers: _headers,
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return data;
+    }
+    throw Exception(
+      'Failed to get lecture availability: ${data['error'] ?? 'Unknown error'}',
+    );
+  }
+
+  static Future<Map<String, dynamic>> updateLectureAvailability({
+    required String id,
+    required String day,
+    required bool available,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/lectures/$id/availability'),
+      headers: _headers,
+      body: jsonEncode({'day': day, 'available': available}),
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return data;
+    }
+    throw Exception(
+      'Failed to update lecture availability: ${data['error'] ?? 'Unknown error'}',
+    );
+  }
+
+  // Date-specific availability
+  static Future<Map<String, dynamic>> updateLectureDateAvailability({
+    required String id,
+    required String date,
+    required bool available,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/lectures/$id/date-availability'),
+      headers: _headers,
+      body: jsonEncode({'date': date, 'available': available}),
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return data;
+    }
+    throw Exception(
+      'Failed to update lecture date availability: ${data['error'] ?? 'Unknown error'}',
+    );
+  }
+
+  static Future<Map<String, dynamic>> getLectureDateAvailability(
+    String id,
+  ) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/lectures/$id/date-availability'),
+      headers: _headers,
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return data;
+    }
+    throw Exception(
+      'Failed to get lecture date availability: ${data['error'] ?? 'Unknown error'}',
     );
   }
 

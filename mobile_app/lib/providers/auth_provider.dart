@@ -27,12 +27,12 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> login(String phone, String password) async {
+  Future<bool> login(String email, String password) async {
     _setLoading(true);
     _setError(null);
 
     try {
-      final response = await ApiService.login(phone: phone, password: password);
+      final response = await ApiService.login(email: email, password: password);
 
       if (response['user'] != null) {
         _setUser(User.fromJson(response['user']));
@@ -50,9 +50,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> register({
-    required String name,
+    String? name,
     required String email,
-    required String phone,
     required String password,
   }) async {
     _setLoading(true);
@@ -62,7 +61,6 @@ class AuthProvider with ChangeNotifier {
       final response = await ApiService.register(
         name: name,
         email: email,
-        phone: phone,
         password: password,
       );
 

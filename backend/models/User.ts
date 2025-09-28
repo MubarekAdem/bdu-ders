@@ -2,9 +2,8 @@ import { ObjectId } from "mongodb";
 
 export interface User {
   _id?: ObjectId;
-  name: string;
+  name?: string;
   email: string;
-  phone: string;
   password: string;
   role: "user" | "admin";
   createdAt: Date;
@@ -12,21 +11,19 @@ export interface User {
 }
 
 export interface CreateUserData {
-  name: string;
+  name?: string;
   email: string;
-  phone: string;
   password: string;
   role?: "user" | "admin";
 }
 
 export interface LoginData {
-  phone: string;
+  email: string;
   password: string;
 }
 
 export interface UpdateUserData {
   name?: string;
   email?: string;
-  phone?: string;
   password?: string;
 }

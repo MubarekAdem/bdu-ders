@@ -221,6 +221,119 @@ class LectureProvider with ChangeNotifier {
         .toList();
   }
 
+  // Availability management methods
+  Future<bool> updateLectureAvailability({
+    required String id,
+    required String day,
+    required bool available,
+  }) async {
+    _setLoading(true);
+    _setError(null);
+
+    try {
+      final response = await ApiService.updateLectureAvailability(
+        id: id,
+        day: day,
+        available: available,
+      );
+
+      if (response['lecture'] != null) {
+        await loadLectures(); // Refresh the list
+        return true;
+      } else {
+        _setError(response['error'] ?? 'Failed to update lecture availability');
+        return false;
+      }
+    } catch (e) {
+      _setError('Network error: ${e.toString()}');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Date-specific availability management
+  Future<bool> updateLectureDateAvailability({
+    required String id,
+    required String date,
+    required bool available,
+  }) async {
+    _setLoading(true);
+    _setError(null);
+
+    try {
+      final response = await ApiService.updateLectureDateAvailability(
+        id: id,
+        date: date,
+        available: available,
+      );
+
+      if (response['lecture'] != null) {
+        await loadLectures(); // Refresh the list
+        return true;
+      } else {
+        _setError(
+          response['error'] ?? 'Failed to update lecture date availability',
+        );
+        return false;
+      }
+    } catch (e) {
+      _setError('Network error: ${e.toString()}');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<Map<String, dynamic>?> getLectureAvailability(String id) async {
+    _setLoading(true);
+    _setError(null);
+
+    try {
+      final response = await ApiService.getLectureAvailability(id);
+      return response;
+    } catch (e) {
+      _setError('Network error: ${e.toString()}');
+      return null;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Filter lectures by availability
+  List<Lecture> getAvailableLecturesForDay(String day) {
+    return _lectures
+        .where(
+          (lecture) =>
+              lecture.days.contains(day) && lecture.isAvailableForDay(day),
+        )
+        .toList();
+  }
+
+  List<Lecture> getUnavailableLecturesForDay(String day) {
+    return _lectures
+        .where(
+          (lecture) =>
+              lecture.days.contains(day) && !lecture.isAvailableForDay(day),
+        )
+        .toList();
+  }
+
+  List<Lecture> getAvailableLecturesForToday() {
+    final today = DateTime.now();
+    final dayNames = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+    final todayName = dayNames[today.weekday - 1];
+    return getAvailableLecturesForDay(todayName);
+  }
+
   void clearError() {
     _setError(null);
   }
