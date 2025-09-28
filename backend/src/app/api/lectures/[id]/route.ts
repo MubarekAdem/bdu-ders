@@ -33,12 +33,15 @@ export async function GET(
       lecture: {
         id: lecture._id,
         title: lecture.title,
-        time: lecture.time,
-        day: lecture.day,
+        timeStart: lecture.timeStart,
+        timeEnd: lecture.timeEnd,
+        days: lecture.days,
         location: lecture.location,
         lecturerName: lecture.lecturerName,
         isMarked: lecture.isMarked,
         markedDate: lecture.markedDate,
+        dayAvailability: lecture.dayAvailability,
+        dateAvailability: lecture.dateAvailability,
         createdAt: lecture.createdAt,
         updatedAt: lecture.updatedAt,
       },
@@ -59,7 +62,13 @@ export const PUT = requireAdmin(
     context?: { params: Promise<{ id: string }> }
   ) => {
     try {
-      const params = (await context?.params) || {};
+      const params = await context?.params;
+      if (!params) {
+        return NextResponse.json(
+          { error: "Missing parameters" },
+          { status: 400 }
+        );
+      }
       const { id } = params;
       const body: UpdateLectureData = await request.json();
 
@@ -85,18 +94,28 @@ export const PUT = requireAdmin(
       }
 
       // Validate time format if provided
-      if (body.time) {
+      if (body.timeStart) {
         const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-        if (!timeRegex.test(body.time)) {
+        if (!timeRegex.test(body.timeStart)) {
           return NextResponse.json(
-            { error: "Invalid time format. Use HH:MM" },
+            { error: "Invalid timeStart format. Use HH:MM" },
             { status: 400 }
           );
         }
       }
 
-      // Validate day if provided
-      if (body.day) {
+      if (body.timeEnd) {
+        const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+        if (!timeRegex.test(body.timeEnd)) {
+          return NextResponse.json(
+            { error: "Invalid timeEnd format. Use HH:MM" },
+            { status: 400 }
+          );
+        }
+      }
+
+      // Validate days if provided
+      if (body.days) {
         const validDays = [
           "Monday",
           "Tuesday",
@@ -106,11 +125,13 @@ export const PUT = requireAdmin(
           "Saturday",
           "Sunday",
         ];
-        if (!validDays.includes(body.day)) {
-          return NextResponse.json(
-            { error: "Invalid day. Use full day name (e.g., Monday)" },
-            { status: 400 }
-          );
+        for (const day of body.days) {
+          if (!validDays.includes(day)) {
+            return NextResponse.json(
+              { error: "Invalid day. Use full day name (e.g., Monday)" },
+              { status: 400 }
+            );
+          }
         }
       }
 
@@ -140,12 +161,15 @@ export const PUT = requireAdmin(
         lecture: {
           id: updatedLecture?._id,
           title: updatedLecture?.title,
-          time: updatedLecture?.time,
-          day: updatedLecture?.day,
+          timeStart: updatedLecture?.timeStart,
+          timeEnd: updatedLecture?.timeEnd,
+          days: updatedLecture?.days,
           location: updatedLecture?.location,
           lecturerName: updatedLecture?.lecturerName,
           isMarked: updatedLecture?.isMarked,
           markedDate: updatedLecture?.markedDate,
+          dayAvailability: updatedLecture?.dayAvailability,
+          dateAvailability: updatedLecture?.dateAvailability,
           updatedAt: updatedLecture?.updatedAt,
         },
       });
@@ -166,7 +190,13 @@ export const DELETE = requireAdmin(
     context?: { params: Promise<{ id: string }> }
   ) => {
     try {
-      const params = (await context?.params) || {};
+      const params = await context?.params;
+      if (!params) {
+        return NextResponse.json(
+          { error: "Missing parameters" },
+          { status: 400 }
+        );
+      }
       const { id } = params;
 
       if (!ObjectId.isValid(id)) {

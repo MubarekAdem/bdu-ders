@@ -10,7 +10,13 @@ export const PUT = requireAdmin(
     context?: { params: Promise<{ id: string }> }
   ) => {
     try {
-      const params = (await context?.params) || {};
+      const params = await context?.params;
+      if (!params) {
+        return NextResponse.json(
+          { error: "Missing parameters" },
+          { status: 400 }
+        );
+      }
       const { id } = params;
       const body = await request.json();
       const { role } = body;

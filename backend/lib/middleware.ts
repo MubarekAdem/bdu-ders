@@ -5,7 +5,6 @@ export interface AuthenticatedRequest extends NextRequest {
   user?: {
     id: string;
     email: string;
-    phone: string;
     role: string;
   };
 }

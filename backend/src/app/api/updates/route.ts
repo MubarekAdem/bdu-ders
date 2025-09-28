@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "../../../../lib/mongodb";
-import { authenticateToken, requireAdmin } from "../../../../lib/middleware";
+import {
+  authenticateToken,
+  requireAdmin,
+  AuthenticatedRequest,
+} from "../../../../lib/middleware";
 import { Update, CreateUpdateData } from "../../../../models/Update";
 import { ObjectId } from "mongodb";
 
@@ -43,7 +47,7 @@ export const GET = authenticateToken(async (req: AuthenticatedRequest) => {
 // POST /api/updates - Create new update (admin only)
 export const POST = requireAdmin(async (req: AuthenticatedRequest) => {
   try {
-    const body: CreateUpdateData = await request.json();
+    const body: CreateUpdateData = await req.json();
     const { title, content, type, priority, expiresAt } = body;
 
     // Validate required fields

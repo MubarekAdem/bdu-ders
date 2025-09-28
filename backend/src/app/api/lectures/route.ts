@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "../../../../lib/mongodb";
-import { authenticateToken, requireAdmin } from "../../../../lib/middleware";
+import {
+  authenticateToken,
+  requireAdmin,
+  AuthenticatedRequest,
+} from "../../../../lib/middleware";
 import { Lecture, CreateLectureData } from "../../../../models/Lecture";
 import { ObjectId } from "mongodb";
 

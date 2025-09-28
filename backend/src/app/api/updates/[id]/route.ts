@@ -11,7 +11,13 @@ export const PUT = requireAdmin(
     context?: { params: Promise<{ id: string }> }
   ) => {
     try {
-      const params = (await context?.params) || {};
+      const params = await context?.params;
+      if (!params) {
+        return NextResponse.json(
+          { error: "Missing parameters" },
+          { status: 400 }
+        );
+      }
       const { id } = params;
       const body: UpdateData = await request.json();
 
@@ -109,7 +115,13 @@ export const DELETE = requireAdmin(
     context?: { params: Promise<{ id: string }> }
   ) => {
     try {
-      const params = (await context?.params) || {};
+      const params = await context?.params;
+      if (!params) {
+        return NextResponse.json(
+          { error: "Missing parameters" },
+          { status: 400 }
+        );
+      }
       const { id } = params;
 
       if (!ObjectId.isValid(id)) {
