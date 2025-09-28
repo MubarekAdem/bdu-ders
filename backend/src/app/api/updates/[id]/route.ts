@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "../../../../../../../lib/mongodb";
-import { requireAdmin } from "../../../../../../../lib/middleware";
-import { Update, UpdateData } from "../../../../../../../models/Update";
+import { getDb } from "./../../../../../lib/mongodb";
+import { requireAdmin } from "./../../../../../lib/middleware";
+import { Update, UpdateData } from "./../../../../../models/Update";
 import { ObjectId } from "mongodb";
 
 // PUT /api/updates/[id] - Update update (admin only)
